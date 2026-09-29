@@ -132,3 +132,95 @@ function supprimerCandidat() {
     console.log(" Candidat introuvable !");
   }
 }
+function rechercherCandidats() {
+  console.log("\n--- Rechercher des candidats ---");
+  const nomRecherche = prompt("Entrez le nom du candidat : ").toLowerCase();
+  const resultats = candidats.filter(c => c.nom.toLowerCase().includes(nomRecherche));
+  if (resultats.length > 0) {
+    console.log(`\n--- Résultats de recherche (${resultats.length}) ---`);
+    resultats.forEach(c => {
+      console.log(`CIN: ${c.cin} | Nom: ${c.nom} ${c.prenom} | Parti: ${c.parti} | Votes: ${c.electeurs.length}`);
+    });
+  } else {
+    console.log(" Aucun candidat trouvé avec ce nom.");
+  }
+}
+function afficherStatistiques() {
+  console.log("\n================ Statistiques de l'Élection ================");
+  console.log(`1. Nombre total de candidats : ${candidats.length}`);
+  const totalVotes = candidats.reduce((sum, c) => sum + c.electeurs.length, 0);
+  console.log(`2. Nombre total de votes exprimés : ${totalVotes}`);
+  console.log("\n3. Top 3 des candidats :");
+  const top3 = [...candidats]
+    .sort((a, b) => b.electeurs.length - a.electeurs.length)
+    .slice(0, 3);
+  if (top3.length === 0) {
+    console.log("   Aucun candidat disponible.");
+  } else {
+    top3.forEach((c, index) => {
+      console.log(`   #${index + 1} : ${c.nom} ${c.prenom} (${c.parti}) - ${c.electeurs.length} votes`);
+    });
+  }
+  console.log("\n4. Nombre de candidats par parti politique :");
+  const partis = {};
+  candidats.forEach(c => {
+    partis[c.parti] = (partis[c.parti] || 0) + 1;
+  });
+  for (const [parti, nombre] of Object.entries(partis)) {
+    console.log(`   - ${parti} : ${nombre} candidat(s)`);
+  }
+  console.log("===========================================================");
+} afficherStatistiques()
+function menuPrincipal() {
+  let boucle = true;
+  while (boucle) {
+    console.log(`
+====================
+   MENU PRINCIPAL   
+====================
+ 1  Ajouter un nouveau candidat
+ 2  Ajouter plusieurs candidats à la fois
+ 3  Afficher la liste des candidats
+ 4  Voter pour un candidat
+ 5  Modifier les informations d'un candidat
+ 6  Supprimer un candidat
+ 7  Rechercher des candidats
+ 8  Statistiques de l'élection
+ 0  Quitter l'application
+    `);
+    const choix = prompt("Choisissez une option (0-8) : ");
+    switch (choix) {
+      case '1':
+        ajouterCandidat();
+        break;
+      case '2':
+        ajouterPlusieursCandidats();
+        break;
+      case '3':
+        afficherCandidats();
+        break;
+      case '4':
+        voter();
+        break;
+      case '5':
+        modifierCandidat();
+        break;
+      case '6':
+        supprimerCandidat();
+        break;
+      case '7':
+        rechercherCandidats();
+        break;
+      case '8':
+        afficherStatistiques();
+        break;
+      case '0':
+        console.log("\nMerci d'avoir utilisé l'application. Au revoir !");
+        boucle = false;
+        break;
+      default:
+        console.log(" Option invalide, veuillez réemployer un choix entre 0 et 8.");
+    }
+  }
+}
+menuPrincipal();
