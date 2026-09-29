@@ -47,3 +47,32 @@ function ajouterPlusieursCandidats() {
     ajouterCandidat();
   }
 }
+function afficherCandidats() {
+  if (candidats.length === 0) {
+    console.log("\n Aucun candidat dans la liste.");
+    return;
+  }
+  console.log("\n--- Afficher les candidats ---");
+  console.log("1. Trier par nombre de votes (ordre décroissant)");
+  console.log("2. Filtrer par parti politique");
+  const choix = prompt("Choisissez une option (1 ou 2) : ");
+  let listeAffichee = [...candidats];
+  if (choix === "1") {
+    listeAffichee.sort((a, b) => b.electeurs.length - a.electeurs.length);
+  } else if (choix === "2") {
+    const partiRecherche = prompt("Entrez le nom du parti politique : ");
+    listeAffichee = listeAffichee.filter(c => c.parti.toLowerCase() === partiRecherche.toLowerCase());
+  } else {
+    console.log(" Option invalide.");
+    return;
+  }
+  if (listeAffichee.length === 0) {
+    console.log(" Aucun candidat trouvé.");
+    return;
+  }
+  console.log("\n================ Liste des Candidats ================");
+  listeAffichee.forEach(c => {
+    console.log(`CIN: ${c.cin} | Nom: ${c.nom} ${c.prenom} | Parti: ${c.parti} | Âge: ${c.age} ans | Votes: ${c.electeurs.length}`);
+  });
+  console.log("=====================================================");
+}
