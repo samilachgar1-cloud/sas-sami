@@ -76,3 +76,59 @@ function afficherCandidats() {
   });
   console.log("=====================================================");
 }
+function voter() {
+  console.log("\n--- Voter pour un candidat ---");
+  const cinElecteur = prompt("Entrez votre CIN (Électeur) : ").toUpperCase();
+  const dejaVote = candidats.some(c => c.electeurs.includes(cinElecteur));
+  if (dejaVote) {
+    console.log("\n Vous avez déjà voté et vous n'avez pas le droit de modifier votre vote ni de voter à nouveau.");
+    return;
+  }
+  const cinCandidat = prompt("Entrez la CIN du candidat pour lequel vous voulez voter : ").toUpperCase();
+  const candidat = candidats.find(c => c.cin === cinCandidat);
+  if (!candidat) {
+    console.log(" Candidat introuvable avec cette CIN !");
+    return;
+  }
+  candidat.electeurs.push(cinElecteur);
+  console.log(` Votre vote pour ${candidat.nom} ${candidat.prenom} a été enregistré avec succès !`);
+}
+function modifierCandidat() {
+  console.log("\n--- Modifier un candidat ---");
+  const cin = prompt("Entrez la CIN du candidat à modifier : ").toUpperCase();
+  const candidat = candidats.find(c => c.cin === cin);
+  if (!candidat) {
+    console.log(" Candidat introuvable !");
+    return;
+  }
+  console.log(`Modification de : ${candidat.nom} ${candidat.prenom}`);
+  console.log("1. Modifier le parti politique");
+  console.log("2. Modifier l'âge");
+  const choix = prompt("Choisissez une option (1 ou 2) : ");
+  if (choix === "1") {
+    const nouveauParti = prompt("Entrez le nouveau parti politique : ");
+    candidat.parti = nouveauParti;
+    console.log(" Parti politique mis à jour avec succès !");
+  } else if (choix === "2") {
+    const nouvelAge = parseInt(prompt("Entrez le nouvel âge : "));
+    if (!isNaN(nouvelAge) && nouvelAge >= 18) {
+      candidat.age = nouvelAge;
+      console.log(" Âge mis à jour avec succès !");
+    } else {
+      console.log(" Âge invalide !");
+    }
+  } else {
+    console.log(" Option invalide !");
+  }
+}
+function supprimerCandidat() {
+  console.log("\n--- Supprimer un candidat ---");
+  const cin = prompt("Entrez la CIN du candidat à supprimer : ").toUpperCase();
+  const index = candidats.findIndex(c => c.cin === cin);
+  if (index !== -1) {
+    const supprime = candidats.splice(index, 1);
+    console.log(`Le candidat ${supprime[0].nom} ${supprime[0].prenom} a été supprimé.`);
+  } else {
+    console.log(" Candidat introuvable !");
+  }
+}
